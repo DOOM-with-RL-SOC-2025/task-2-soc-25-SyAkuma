@@ -36,18 +36,29 @@ class Employee:
     
     def change_city(self, new_city:str) -> bool:
         # Change the city 
+        if self.city==new_city:
+            return False
+        else:
+            self.city=new_city
+            return True
         # Return true if city change, successful, return false if city same as old city
-        pass
 
     def migrate_branch(self, new_code:int) -> bool:
         # Should work only on those employees who have a single 
         # branch to report to. Fail for others.
+        if self.branches.size()>1:
+            return False
+        elif branchmap(self.branches[0]).city==branchmap(new_code).city:
+            self.branches[0]=new_code
+            return True
+        else:
+            return False
         # Change old branch to new if it is in the same city, else return false.
-        pass
 
     def increment(self, increment_amt: int) -> None:
         # Increment salary by amount specified.
-        pass
+        self.salary+=increment_amt
+        return 
 
 
 
@@ -62,20 +73,34 @@ class Engineer(Employee):
         super().__init__(name, age, ID, city, branchcodes, salary)
         
         # Check if position is one of  "Junior", "Senior", "Team Lead", or "Director" 
+        possibilities={"Junior", "Senior", "Team Lead","Director"}
+        if position in possibilities:
+            self.position=position
+        else:
+            raise ValueError("Invalid Position assigned!!")
         # Only then set the position. 
 
     
     def increment(self, amt:int) -> None:
         # While other functions are the same for and engineer,
         # and increment to an engineer's salary should add a 10% bonus on to "amt"
-        pass
+        self.salary+=amt+0.1*self.salary()
+        return
         
     def promote(self, position:str) -> bool:
         # Return false for a demotion or an invalid promotion
         # Promotion can only be to a higher position and
         # it should call the increment function with 30% of the present salary
         # as "amt". Thereafter return True.
-        pass
+        possibilities={"Junior", "Senior", "Team Lead","Director"}
+        if possibilities.index(self.position)<possibilities.index(position) and position in possibilities:
+            self.position=position
+            self.increment(self.salary*0.3)
+            return True
+        elif position in possibilities:
+            raise ValueError("Not a Promotion")
+        else:
+            raise ValueError("Invalid Designation")
 
 
 
