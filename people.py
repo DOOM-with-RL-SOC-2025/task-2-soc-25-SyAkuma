@@ -114,32 +114,63 @@ class Salesman(Employee):
     Add an argument in init which tracks who is the superior
     that the employee reports to. This argument should be the ID of the superior
     It should be None for a "Head" and so, the argument should be optional in init.
-    """
+      """
     
     # An extra member variable!
     superior : int # EMPLOYEE ID of the superior this guy reports to
+    position : str
+    def __init__(self,name, age, ID, city, branchcodes,superior,Position="Rep", salary=None ): # Complete all this! Add arguments
+        super().__init__(name, age, ID, city, branchcodes, salary)
+        self.superior=superior
+        self.position=Position
 
-    def __init__(self, ): # Complete all this! Add arguments
-        pass
     
     # def promote 
-
+    def promote(self,new_pos:str)->bool:
+        possibilities={"Rep", "Manager", "Head"}
+        if possibilities.index(self.position)<possibilities.index(new_pos) and new_pos in possibilities:
+            self.position=new_pos
+            self.increment(self.salary*0.3)
+            return True
+        elif new_pos in possibilities:
+            raise ValueError("Not a Promotion")
+        else:
+            raise ValueError("Invalid Designation")
     # def increment 
+    def increment(self, amt:int):
+        self.salary+=amt+0.05*self.salary()
+        return
 
     def find_superior(self) -> tuple[int, str]:
         # Return the employee ID and name of the superior
         # Report a tuple of None, None if no superior.
-        pass
+        if self.position=="Head":
+            return None
+        else:
+            for man in sales_roster:
+                if man.ID == self.superior:
+                    sup=man.name
+                    return [self.superior,sup]
 
     def add_superior(self) -> bool:
         # Add superior of immediately higher rank.
         # If superior doesn't exist return false,
-        pass
+        if self.position=="Head":
+            return False
+        else:
+            possibilities={"Rep", "Manager", "Head"}
+            for man in sales_roster:
+                if man.position == possibilities(possibilities.index(self.position)+1):
+                    self.superior=man.ID
+                    return True
+            return False
 
 
     def migrate_branch(self, new_code: int) -> bool:
         # This should simply add a branch to the list; even different cities are fine
-        pass
+        self.branches.append(branchmap[new_code])
+        return True
+    
 
     
 
