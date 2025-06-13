@@ -5,7 +5,7 @@ We'll be Querying stuff for testing whether your classes were defined correctly
 Whenever something inappropriate happens (like a function returning false in people.py),
 raise a Value Error.
 """
-from people import * # import everything!
+from people import Employee, Engineer, Salesman, engineer_roster,sales_roster, branchmap # import everything!
 
 if __name__ == "__main__":  # Equivalent to int main() {} in C++.
     last_input = 99
@@ -15,28 +15,48 @@ if __name__ == "__main__":  # Equivalent to int main() {} in C++.
         if last_input == 1:
             name = input("Name:")
             ID = input("ID:")
+            age=int(input("Enter age [Default-0]=").strip())
+            if age== None:
+                age=0
             city = input("City:")
-            branchcodes = input("Branch(es):")
+            branchcodes_input = input("Branch(es):")
             # How will you conver this to a list, given that
             # the user will always enter a comma separated list of branch codes?
             # eg>   2,5
-
+            branchcodes=list(map(int,[code.strip() for code in branchcodes_input.split(",") if code.strip().isdigit()]))
             salary = input("Salary: ")
+            position=input("Position (Junior/Senior/Team Lead/Director) [default-Junior]: ").strip()
+            if position=="":
+                position="Junior"
             # Create a new Engineer with given details.
-            engineer = None # Change this
-
+            engineer = Engineer(name, age=age, ID=ID, city=city, branchcodes=branchcodes, position=position, salary=salary)
             engineer_roster.append(engineer) # Add him to the list! See people.py for definiton
             
         
         elif last_input == 2:
             # Gather input to create a Salesperson
             # Then add them to the roster
-            pass
+            name = input("Name:")
+            ID = input("ID:")
+            age=int(input("Enter age [Default-0]="))
+            if age== None:
+                age=0
+            city = input("City:")
+            branchcodes_input = input("Branch(es):")
+            branchcodes = list(map(int, [code.strip() for code in branchcodes_input.split(",") if code.strip().isdigit()]))
+            position = input("Position (Rep/Manager/Head) [Default-Rep]: ").strip()
+            if position == "":
+                position = "Rep"
+            salary = input("Salary: ")
+            superior_input = input("Superior ID (enter if none): ").strip()
+            superior=int(superior_input)
+            salesman = Salesman(name, age=age, ID=ID, city=city, branchcodes=branchcodes, superior=superior, Position=position, salary=salary)
+            sales_roster.append(salesman)
+
 
         elif last_input == 3:
             ID = int(input("ID: "))
             # Print employee details for the given employee ID that is given. 
-            
             found_employee = None
             for employee in engineer_roster + sales_roster:
                 if employee.ID == int(ID):
@@ -51,10 +71,10 @@ if __name__ == "__main__":  # Equivalent to int main() {} in C++.
                 ## Write code here to list the branch names to
                 ## which the employee reports as a comma separated list
                 ## eg> Branches: Goregaon,Fort
-                branch_names = []
+                branch_names = [branchmap[code]["name"] for code in found_employee.branchcodes]  # Retrieve branch names using branchmap
+                print(f"Branches: {', '.join(branch_names)}")  # Join the branch names with a comma and print
                 ## ???? what comes here??
                 # print(f"Branches: " + ???? )
-                
                 print(f"Salary: {found_employee.salary}")
 
         elif last_input == 4:
