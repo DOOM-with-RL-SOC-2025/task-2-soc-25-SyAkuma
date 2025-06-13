@@ -46,9 +46,9 @@ class Employee:
     def migrate_branch(self, new_code:int) -> bool:
         # Should work only on those employees who have a single 
         # branch to report to. Fail for others.
-        if self.branches.size()>1:
+        if len(self.branches)>1:
             return False
-        elif branchmap(self.branches[0]).city==branchmap(new_code).city:
+        elif branchmap[self.branches[0]].city==branchmap[new_code].city:
             self.branches[0]=new_code
             return True
         else:
@@ -73,7 +73,7 @@ class Engineer(Employee):
         super().__init__(name, age, ID, city, branchcodes, salary)
         
         # Check if position is one of  "Junior", "Senior", "Team Lead", or "Director" 
-        possibilities={"Junior", "Senior", "Team Lead","Director"}
+        possibilities=["Junior", "Senior", "Team Lead","Director"]
         if position in possibilities:
             self.position=position
         else:
@@ -84,7 +84,7 @@ class Engineer(Employee):
     def increment(self, amt:int) -> None:
         # While other functions are the same for and engineer,
         # and increment to an engineer's salary should add a 10% bonus on to "amt"
-        self.salary+=amt+0.1*self.salary()
+        self.salary+=amt+0.1*self.salary
         return
         
     def promote(self, position:str) -> bool:
@@ -92,7 +92,7 @@ class Engineer(Employee):
         # Promotion can only be to a higher position and
         # it should call the increment function with 30% of the present salary
         # as "amt". Thereafter return True.
-        possibilities={"Junior", "Senior", "Team Lead","Director"}
+        possibilities=["Junior", "Senior", "Team Lead","Director"]
         if possibilities.index(self.position)<possibilities.index(position) and position in possibilities:
             self.position=position
             self.increment(self.salary*0.3)
@@ -119,7 +119,7 @@ class Salesman(Employee):
     # An extra member variable!
     superior : int # EMPLOYEE ID of the superior this guy reports to
     position : str
-    def __init__(self,name, age, ID, city, branchcodes,superior,Position="Rep", salary=None ): # Complete all this! Add arguments
+    def __init__(self,name, age, ID, city, branchcodes,superior=None,Position="Rep", salary=None ): # Complete all this! Add arguments
         super().__init__(name, age, ID, city, branchcodes, salary)
         self.superior=superior
         self.position=Position
@@ -138,19 +138,20 @@ class Salesman(Employee):
             raise ValueError("Invalid Designation")
     # def increment 
     def increment(self, amt:int):
-        self.salary+=amt+0.05*self.salary()
+        self.salary+=amt+0.05*self.salary
         return
 
     def find_superior(self) -> tuple[int, str]:
         # Return the employee ID and name of the superior
         # Report a tuple of None, None if no superior.
         if self.position=="Head":
-            return None
+            return None,None
         else:
             for man in sales_roster:
                 if man.ID == self.superior:
                     sup=man.name
                     return [self.superior,sup]
+                return None, None
 
     def add_superior(self) -> bool:
         # Add superior of immediately higher rank.
@@ -158,9 +159,9 @@ class Salesman(Employee):
         if self.position=="Head":
             return False
         else:
-            possibilities={"Rep", "Manager", "Head"}
+            possibilities=["Rep", "Manager", "Head"]
             for man in sales_roster:
-                if man.position == possibilities(possibilities.index(self.position)+1):
+                if man.position == possibilities[possibilities.index(self.position)+1]:
                     self.superior=man.ID
                     return True
             return False
@@ -168,7 +169,7 @@ class Salesman(Employee):
 
     def migrate_branch(self, new_code: int) -> bool:
         # This should simply add a branch to the list; even different cities are fine
-        self.branches.append(branchmap[new_code])
+        self.branches.append(new_code)
         return True
     
 
