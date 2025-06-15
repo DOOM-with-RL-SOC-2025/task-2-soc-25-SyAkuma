@@ -7,6 +7,14 @@ raise a Value Error.
 """
 from people import Employee, Engineer, Salesman, engineer_roster,sales_roster, branchmap # import everything!
 
+def find_emp(ID: int):
+    found_employee = None
+    for employee in engineer_roster + sales_roster:
+        if employee.ID == int(ID):
+                    found_employee = employee
+                    return found_employee
+    return None
+
 if __name__ == "__main__":  # Equivalent to int main() {} in C++.
     last_input = 99
     while last_input != 0:
@@ -82,25 +90,46 @@ if __name__ == "__main__":  # Equivalent to int main() {} in C++.
             # Change branch to new branch or add a new branch depending on class
             # Inheritance should automatically do this. 
             # There should be no IF-ELSE or ternary operators in this zone
-            pass
+            newbranchcode=int(input("Enter new branchcode:-"))
+            ID = int(input("ID: "))
+            # Print employee details for the given employee ID that is given. 
+            found_employee=find_emp(ID)
+            found_employee.migrate_branch(newbranchcode)
             #### NO IF ELSE ZONE ENDS #################################################
 
         elif last_input == 5:
             ID = int(input("Enter Employee ID to promote: "))
             # promote employee to next position
+            found_employee=find_emp(ID)
+            new_pos=input("Enter New Position:").strip()
+            found_employee.promote(new_pos)
 
         elif last_input == 6:
             ID = int(input("Enter Employee ID to give increment: "))
             # Increment salary of employee.
+            amt=int(input("Enter increment amount:").strip())
+            found_employee=find_emp(ID)
+            found_employee.increment(amt)
         
         elif last_input == 7:
             ID = int(input("Enter Employee ID to find superior: "))
             # Print superior of the sales employee.
+            found_employee=find_emp(ID)
+            if found_employee not in sales_roster:
+                raise ValueError("Given ID is not of a Sales Employee")
+            print(found_employee.find_superior())
         
         elif last_input == 8:
             ID_E = int(input("Enter Employee ID to add superior: "))
             ID_S = int(input("Enter Employee ID of superior: "))
             # Add superior of a sales employee
+            found_employee=find_emp(ID_E)
+            found_superior=find_emp(ID_S)
+            if found_employee not in sales_roster:
+                raise ValueError("Given ID is not of a Sales Employee")
+            if found_superior not in sales_roster:
+                raise ValueError("Given ID is not of a Sales Superior")
+            found_employee.add_superior(found_superior)
 
         else:
             raise ValueError("No such query number defined")

@@ -93,6 +93,8 @@ class Engineer(Employee):
         # it should call the increment function with 30% of the present salary
         # as "amt". Thereafter return True.
         possibilities=["Junior", "Senior", "Team Lead","Director"]
+        if position=="":
+            self.promote(self,possibilities[possibilities.index(self.position)+1])
         if possibilities.index(self.position)<possibilities.index(position) and position in possibilities:
             self.position=position
             self.increment(self.salary*0.3)
@@ -127,7 +129,9 @@ class Salesman(Employee):
     
     # def promote 
     def promote(self,new_pos:str)->bool:
-        possibilities={"Rep", "Manager", "Head"}
+        possibilities=["Rep", "Manager", "Head"]
+        if new_pos=="":
+            self.promote(self,possibilities[possibilities.index(self.position)+1])
         if possibilities.index(self.position)<possibilities.index(new_pos) and new_pos in possibilities:
             self.position=new_pos
             self.increment(self.salary*0.3)
@@ -153,13 +157,17 @@ class Salesman(Employee):
                     return [self.superior,sup]
                 return None, None
 
-    def add_superior(self) -> bool:
+    def add_superior(self,superior=None) -> bool:
         # Add superior of immediately higher rank.
         # If superior doesn't exist return false,
+        possibilities=["Rep", "Manager", "Head"]
         if self.position=="Head":
             return False
+        elif self.superior==None and superior is not None:
+            if possibilities.index(superior.position) >possibilities.index(self.position):
+                self.superior=superior.ID
+                return True
         else:
-            possibilities=["Rep", "Manager", "Head"]
             for man in sales_roster:
                 if man.position == possibilities[possibilities.index(self.position)+1]:
                     self.superior=man.ID
